@@ -1,0 +1,20 @@
+{
+	// Files
+	"files.exclude": {
+		"**/[Dd]ebug": true,
+		"**/[Dd]ebugPublic": true,
+		"**/[Rr]elease": true,
+		"**/[Rr]eleases": true,
+		"**/x64": true,
+		"**/x86": true,
+		"**/[Aa][Rr][Mm]": true,
+		"**/[Aa][Rr][Mm]64": true,
+		"**/bld": true,
+		"**/[Bb]in": true,
+		"**/[Oo]bj": true,
+		"**/[Ll]og": true
+	},
+
+	// NUKE Support
+	"nuke.buildProjectPattern": "*Build/*Build*.csproj"
+}
