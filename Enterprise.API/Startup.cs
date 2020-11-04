@@ -1,3 +1,4 @@
+using Enterprise.Infrastructure.Data.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -25,6 +26,8 @@ namespace Enterprise.API
 					options.ReturnHttpNotAcceptable = true;
 				})
 				.AddXmlDataContractSerializerFormatters();
+
+			services.AddDataAccess(Configuration.GetConnectionString("EnterpriseDb"));
 
 			services.AddSwaggerGen(c =>
 			{

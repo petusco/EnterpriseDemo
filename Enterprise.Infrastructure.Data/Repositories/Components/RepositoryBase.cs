@@ -2,16 +2,17 @@ using System.Collections.Generic;
 using System.Linq;
 using Enterprise.Domain.Contracts.Repositories;
 using Enterprise.Domain.Specifications;
+using Microsoft.EntityFrameworkCore;
 
 namespace Enterprise.Infrastructure.Data.Repositories
 {
 	// Excessive methods like Remove/Delete inherited from this base class may be hidden by the repository
 	// Alternative: Use composition
-	internal class RepositoryBase<T> : IEditableRepository<T>
+	internal class RepositoryBase<T> : IReadableRepository<T>, IEditableRepository<T> where T : class
 	{
-		private readonly List<T> _entities;
+		private readonly DbSet<T> _entities;
 
-		public RepositoryBase(List<T> entities)
+		public RepositoryBase(DbSet<T> entities)
 		{
 			_entities = entities;
 		}

@@ -4,11 +4,11 @@ using Enterprise.Domain.Entities;
 
 namespace Enterprise.Domain.Specifications.Orders
 {
-	public class ActiveOrderSpecification : Specification<Order>
+	public class ClosedOrderSpecification : Specification<Order>
 	{
 		public override Expression<Func<Order, bool>> ToExpression()
 		{
-			return order => order.State == "Active";
+			return order => order.State == "Closed";
 		}
 	}
 }
