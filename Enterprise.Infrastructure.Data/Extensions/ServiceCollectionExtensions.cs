@@ -14,6 +14,8 @@ namespace Enterprise.Infrastructure.Data.Extensions
 				.AddRepositories();
 
 		private static IServiceCollection AddRepositories(this IServiceCollection services) =>
-			services.AddScoped<IOrderRepository, OrderRepository>();
+			services
+				.AddScoped<ICustomerRepository, CustomerRepository>()
+				.AddScoped<IOrderRepository, OrderRepository>();
 	}
 }

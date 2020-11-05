@@ -1,6 +1,8 @@
+using Enterprise.API.Helpers;
 using Enterprise.Infrastructure.Data.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,6 +26,7 @@ namespace Enterprise.API
 				.AddControllers(options =>
 				{
 					options.ReturnHttpNotAcceptable = true;
+					options.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
 				})
 				.AddXmlDataContractSerializerFormatters();
 

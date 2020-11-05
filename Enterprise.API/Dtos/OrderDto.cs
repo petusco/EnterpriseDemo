@@ -1,8 +1,8 @@
 using System;
 
-namespace Enterprise.Domain.Entities
+namespace Enterprise.API.Dtos
 {
-	public class Order
+	public class OrderDto
 	{
 		public Guid Id { get; set; }
 		public string State { get; set; }
