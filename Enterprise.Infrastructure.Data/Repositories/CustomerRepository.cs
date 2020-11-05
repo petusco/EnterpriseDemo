@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Enterprise.Domain.Contracts.Repositories;
@@ -23,6 +24,14 @@ namespace Enterprise.Infrastructure.Data.Repositories
 			return _dbSet
 				.Include(customer => customer.Orders)
 				.ToArray();
+		}
+
+		public Customer FindById(Guid customerId)
+		{
+			return _dbSet
+				.Include(customer => customer.Orders)
+				.Where(customer => customer.Id == customerId)
+				.SingleOrDefault();
 		}
 	}
 }

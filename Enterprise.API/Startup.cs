@@ -1,3 +1,5 @@
+using System;
+using AutoMapper;
 using Enterprise.API.Helpers;
 using Enterprise.Infrastructure.Data.Extensions;
 using Microsoft.AspNetCore.Builder;
@@ -29,6 +31,8 @@ namespace Enterprise.API
 					options.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
 				})
 				.AddXmlDataContractSerializerFormatters();
+
+			services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 			services.AddDataAccess(Configuration.GetConnectionString("EnterpriseDb"));
 

@@ -1,5 +1,6 @@
+using System;
 using System.Collections.Generic;
-using System.Linq;
+using AutoMapper;
 using Enterprise.API.Dtos;
 using Enterprise.Domain.Contracts.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -11,30 +12,30 @@ namespace Enterprise.API.Controllers
 	public class CustomersController : ControllerBase
 	{
 		private readonly ICustomerRepository _customerRepository;
+		private readonly IMapper _mapper;
 
-		public CustomersController(ICustomerRepository customerRepository)
+		public CustomersController(ICustomerRepository customerRepository, IMapper mapper)
 		{
 			_customerRepository = customerRepository;
+			_mapper = mapper;
 		}
 
 		[HttpGet]
 		public ActionResult<IEnumerable<CustomerDto>> GetCustomers()
 		{
-			var dtos = _customerRepository.FindAll()
-				.Select(customer => new CustomerDto
-				{
-					Id = customer.Id,
-					Name = $"{customer.FirstName} {customer.LastName}",
-					Orders = customer.Orders
-						.Select(order => new OrderDto
-						{
-							Id = order.Id,
-							State = order.State,
-							CustomerId = order.CustomerId
-						})
-						.ToArray()
-				});
-			return Ok(dtos);
+			var customersFromRepo = _customerRepository.FindAll();
+			return Ok(_mapper.Map<IEnumerable<CustomerDto>>(customersFromRepo));
+		}
+
+		[HttpGet("{customerId}")]
+		public ActionResult<CustomerDto> GetCustomers(Guid customerId)
+		{
+			var customerFromRepo = _customerRepository.FindById(customerId);
+			if (customerFromRepo == null)
+			{
+				return NotFound();
+			}
+			return Ok(_mapper.Map<CustomerDto>(customerFromRepo));
 		}
 	}
 }

@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System.Linq;
+using AutoMapper;
 using Enterprise.API.Dtos;
 using Enterprise.Domain.Contracts.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -11,18 +11,19 @@ namespace Enterprise.API.Controllers
 	public class OrdersController : ControllerBase
 	{
 		private readonly IOrderRepository _orderRepository;
+		private readonly IMapper _mapper;
 
-		public OrdersController(IOrderRepository orderRepository)
+		public OrdersController(IOrderRepository orderRepository, IMapper mapper)
 		{
 			_orderRepository = orderRepository;
+			_mapper = mapper;
 		}
 
 		[HttpGet]
 		public ActionResult<IEnumerable<OrderDto>> GetActiveOrders()
 		{
-			var orders = _orderRepository.FindAllActiveOrders();
-			var dtos = orders.Select(order => new OrderDto { Id = order.Id, State = order.State });
-			return Ok(orders);
+			var ordersFromRepo = _orderRepository.FindAllActiveOrders();
+			return Ok(_mapper.Map<IEnumerable<OrderDto>>(ordersFromRepo));
 		}
 	}
 }
