@@ -33,5 +33,25 @@ namespace Enterprise.Infrastructure.Data.Repositories
 				.Where(customer => customer.Id == customerId)
 				.SingleOrDefault();
 		}
+
+		public void Add(Customer entity)
+		{
+			_base.Add(entity);
+		}
+
+		public void AddRange(IEnumerable<Customer> entities)
+		{
+			_base.AddRange(entities);
+		}
+
+		public void Remove(Customer entity)
+		{
+			_base.Remove(entity);
+		}
+
+		public void RemoveRange(IEnumerable<Customer> entities)
+		{
+			_base.RemoveRange(entities);
+		}
 	}
 }

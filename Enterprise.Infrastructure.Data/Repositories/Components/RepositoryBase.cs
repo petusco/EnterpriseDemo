@@ -8,7 +8,7 @@ namespace Enterprise.Infrastructure.Data.Repositories
 {
 	// Excessive methods like Remove/Delete inherited from this base class may be hidden by the repository
 	// Alternative: Use composition
-	internal class RepositoryBase<T> : IReadableRepository<T>, IEditableRepository<T> where T : class
+	internal class RepositoryBase<T> : IReadableRepository<T>, IEditableEntityRepository<T> where T : class
 	{
 		private readonly DbSet<T> _entities;
 

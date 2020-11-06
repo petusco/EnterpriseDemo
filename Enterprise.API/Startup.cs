@@ -4,6 +4,7 @@ using Enterprise.API.Helpers;
 using Enterprise.Infrastructure.Data.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -48,6 +49,17 @@ namespace Enterprise.API
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
+			}
+			else
+			{
+				app.UseExceptionHandler(appBuilder =>
+				{
+					appBuilder.Run(async context =>
+					{
+						context.Response.StatusCode = 500;
+						await context.Response.WriteAsync("An unexpected fault happened. Try again later.");
+					});
+				});
 			}
 
 			app.UseSwagger();
