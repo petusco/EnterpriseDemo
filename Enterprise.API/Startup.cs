@@ -2,6 +2,7 @@ using System;
 using AutoMapper;
 using Enterprise.API.Helpers;
 using Enterprise.Infrastructure.Data.Extensions;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -31,12 +32,17 @@ namespace Enterprise.API
 					options.ReturnHttpNotAcceptable = true;
 					options.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
 				})
-				.AddXmlDataContractSerializerFormatters();
-
+				.AddXmlDataContractSerializerFormatters()
+				.AddFluentValidation(configExpression =>
+				{
+					configExpression.RegisterValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
+				})
+				.ConfigureApiBehaviorOptions(setupAction =>
+				{
+					setupAction.InvalidModelStateResponseFactory = InvalidModelStateResponseFactory.FactoryFunction;
+				});
 			services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
 			services.AddDataAccess(Configuration.GetConnectionString("EnterpriseDb"));
-
 			services.AddSwaggerGen(c =>
 			{
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
@@ -68,14 +74,9 @@ namespace Enterprise.API
 				c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
 			});
 
-			// app.UseMiddleware<>();
-
 			app.UseHttpsRedirection();
-
 			app.UseRouting();
-
 			app.UseAuthorization();
-
 			app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapControllers();
