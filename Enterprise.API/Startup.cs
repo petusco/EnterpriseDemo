@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace Enterprise.API
 {
@@ -43,9 +44,10 @@ namespace Enterprise.API
 				});
 			services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 			services.AddDataAccess(Configuration.GetConnectionString("EnterpriseDb"));
-			services.AddSwaggerGen(c =>
+			services.AddSwaggerGen(options =>
 			{
-				c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+				options.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+				options.AddFluentValidationRules();
 			});
 		}
 
@@ -69,9 +71,9 @@ namespace Enterprise.API
 			}
 
 			app.UseSwagger();
-			app.UseSwaggerUI(c =>
+			app.UseSwaggerUI(options =>
 			{
-				c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+				options.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
 			});
 
 			app.UseHttpsRedirection();

@@ -4,6 +4,7 @@ using AutoMapper;
 using Enterprise.API.Dtos;
 using Enterprise.Domain.Contracts.UnitOfWorks;
 using Enterprise.Domain.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Enterprise.API.Controllers
@@ -22,24 +23,16 @@ namespace Enterprise.API.Controllers
 		}
 
 		[HttpGet]
+		[ProducesResponseType(StatusCodes.Status200OK)]
 		public ActionResult<IEnumerable<CustomerDto>> GetCustomers()
 		{
 			var customersFromRepo = _unitOfWork.Customers.FindAll();
 			return Ok(_mapper.Map<IEnumerable<CustomerDto>>(customersFromRepo));
 		}
 
-		[HttpGet("{customerId}", Name = nameof(GetCustomer))]
-		public ActionResult<CustomerDto> GetCustomer(Guid customerId)
-		{
-			var customerFromRepo = _unitOfWork.Customers.FindById(customerId);
-			if (customerFromRepo == null)
-			{
-				return NotFound();
-			}
-			return Ok(_mapper.Map<CustomerDto>(customerFromRepo));
-		}
-
 		[HttpPost]
+		[ProducesResponseType(StatusCodes.Status201Created)]
+		[ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
 		public ActionResult<CustomerDto> CreateCustomer(CustomerForCreationDto customer)
 		{
 			var customerEntity = _mapper.Map<Customer>(customer);
@@ -53,8 +46,23 @@ namespace Enterprise.API.Controllers
 				value: customerToReturn);
 		}
 
+		[HttpGet("{customerId}", Name = nameof(GetCustomer))]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		public ActionResult<CustomerDto> GetCustomer(Guid customerId)
+		{
+			var customerFromRepo = _unitOfWork.Customers.FindById(customerId);
+			if (customerFromRepo == null)
+			{
+				return NotFound();
+			}
+			return Ok(_mapper.Map<CustomerDto>(customerFromRepo));
+		}
+
 		[HttpDelete("{customerId}")]
-		public ActionResult<CustomerDto> DeleteCustomer(Guid customerId)
+		[ProducesResponseType(StatusCodes.Status204NoContent)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		public ActionResult DeleteCustomer(Guid customerId)
 		{
 			var customerFromRepo = _unitOfWork.Customers.FindById(customerId);
 			if (customerFromRepo == null)

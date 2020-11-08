@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using AutoMapper;
 using Enterprise.API.Dtos;
 using Enterprise.Domain.Contracts.Repositories;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Enterprise.API.Controllers
@@ -20,6 +21,7 @@ namespace Enterprise.API.Controllers
 		}
 
 		[HttpGet]
+		[ProducesResponseType(StatusCodes.Status200OK)]
 		public ActionResult<IEnumerable<OrderDto>> GetActiveOrders()
 		{
 			var ordersFromRepo = _orderRepository.FindAllActiveOrders();
